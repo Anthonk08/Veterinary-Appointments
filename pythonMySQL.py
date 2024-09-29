@@ -5,6 +5,7 @@ import tkinter as tk
 from tkinter import *
 from tkinter import ttk
 from tkinter import messagebox
+from tkinter import font
 
 from Invoices import *
 
@@ -57,11 +58,11 @@ class PetsForm:
 
         try:
             base = Tk()
-            base.geometry("1840x340")
+            base.geometry("2020x350")
             base.title("Citas En El Veterinario. Formulario De Servicios")
 
             #Client informa1tion
-            groupBox = LabelFrame(base, text="Datos Del Cliente", padx=20, pady=5)
+            groupBox = LabelFrame(base, text="Datos Del Cliente", padx=5, pady=5)
             groupBox.grid(row=0, column=0, padx=10, pady=10)
             labelId = Label(groupBox, text="ID Factura", width=13, font=("arial", 12)).grid(row=0, column=0)
             textBoxId = Entry(groupBox)
@@ -86,8 +87,8 @@ class PetsForm:
             seleccionService.set("Peluquería y baños")
 
             #Pet information
-            groupBox = LabelFrame(base, text="Datos De La Mascota", padx=20, pady=5)
-            groupBox.grid(row=1, column=0, padx=10, pady=10)
+            groupBox = LabelFrame(base, text="Datos De La Mascota", padx=5, pady=5)
+            groupBox.grid(row=1, column=0, ipadx=5, pady=5)
             labelNamePet = Label(groupBox, text="Nombre de la Mascota", width=20, font=("arial", 12)).grid(row=0, column=0)
             textBoxNamePet = Entry(groupBox)
             textBoxNamePet.grid(row=0, column=1)
@@ -101,9 +102,9 @@ class PetsForm:
             #CRUD Buttons
             groupBox = LabelFrame(base, text="Edicion De Datos", padx=20, pady=5)
             groupBox.grid(row=2, column=0, padx=10, pady=10)
-            Button(groupBox, text="Guardar", width=10, command= self.invoicesSaves).grid(row=3, column=0)
-            Button(groupBox, text="Editar", width=10).grid(row=3, column=1)
-            Button(groupBox, text="Borrar", width=10).grid(row=3, column=2)
+            Button(groupBox, text="Guardar", font="bold", width=15, command= self.invoicesSaves).grid(row=3, column=0)
+            Button(groupBox, text="Editar", font="bold", width=15).grid(row=3, column=1)
+            Button(groupBox, text="Borrar", font="bold", width=15).grid(row=3, column=2)
 
             #Invoice list
             groupBox = LabelFrame(base, text="Lista de Facturas", padx=5, pady=5,)
@@ -130,6 +131,10 @@ class PetsForm:
 
             tree.column("# 7", anchor=CENTER)
             tree.heading("# 7", text="Sexo")
+
+            #Agregar datos a la tabla
+            for row in CInvoices.showInvoice():
+                tree.insert("","end",values=row)
 
             tree.pack()
 
@@ -158,6 +163,9 @@ class PetsForm:
             CInvoices.enterInvoice(client, telephone, email, service, namePet, sex)
             messagebox.showinfo("Informacion", "Los datos fueron guardados")
 
+            #Actualizar tabla
+            self.updateTreeView()
+
             #Limpiar campos
             textBoxClient.delete(0, END)
             textBoxTelephone.delete(0, END)
@@ -167,6 +175,20 @@ class PetsForm:
         except ValueError as error:
             print("Error al ingresar datos {}".format(error))
 
+    #Actualizar datos de la tabla
+    def updateTreeView(self):
+        global tree
+        try:
+            #Borrar los hijos de la tabla
+            tree.delete(*tree.get_children())
+            #Insertar los datos de la tabla
+            date = CInvoices.showInvoice()
+            #Agregar datos a la tabla
+            for row in CInvoices.showInvoice():
+                tree.insert("","end",values=row)
+
+        except ValueError as error:
+            print("Error al actualizar datos {}".format(error))
 
 app = PetsForm()
 app.form()
