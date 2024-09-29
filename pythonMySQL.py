@@ -6,8 +6,55 @@ from tkinter import *
 from tkinter import ttk
 from tkinter import messagebox
 
+from Invoices import *
+
+from Conexion import *
+
 class PetsForm:
+    # Globals Variables
+    global base
+    base = None
+
+    global textBoxId
+    textBoxId = None
+
+    global textBoxClient
+    textBoxClient = None
+
+    global textBoxTelephone
+    textBoxTelephone = None
+
+    global textBoxEmail
+    textBoxEmail = None
+
+    global comboService
+    comboService = None
+
+    global textBoxNamePet
+    textBoxNamePet = None
+
+    global comboSex
+    comboSex = None
+
+    global groupBox
+    groupBox = None
+
+    global tree
+    tree = None
+
     def form(self):
+        #Variables
+        global textBoxId
+        global textBoxClient
+        global textBoxTelephone
+        global textBoxEmail
+        global comboService
+        global textBoxNamePet
+        global comboSex
+        global base
+        global groupBox
+        global tree
+
         try:
             base = Tk()
             base.geometry("1840x340")
@@ -54,7 +101,7 @@ class PetsForm:
             #CRUD Buttons
             groupBox = LabelFrame(base, text="Edicion De Datos", padx=20, pady=5)
             groupBox.grid(row=2, column=0, padx=10, pady=10)
-            Button(groupBox, text="Guardar", width=10).grid(row=3, column=0)
+            Button(groupBox, text="Guardar", width=10, command= self.invoicesSaves).grid(row=3, column=0)
             Button(groupBox, text="Editar", width=10).grid(row=3, column=1)
             Button(groupBox, text="Borrar", width=10).grid(row=3, column=2)
 
@@ -90,6 +137,36 @@ class PetsForm:
 
         except ValueError as error:
             print("Error al mostrar interfaz, error: {}".format(error))
+
+    #Dates Save
+    def invoicesSaves(self):
+        global textBoxClient, textBoxTelephone, textBoxEmail, comboService, textBoxNamePet, comboSex, groupBox
+
+        try:
+            #Verificar que los widgets esten inicializados
+            if textBoxClient is None or textBoxTelephone is None or textBoxEmail is None or comboService is None or textBoxNamePet is None or comboSex is None:
+                print("Los Widgets no estan inicializados")
+                return
+
+            client = textBoxClient.get()
+            telephone = textBoxTelephone.get()
+            email = textBoxEmail.get()
+            service = comboService.get()
+            namePet = textBoxNamePet.get()
+            sex = comboSex.get()
+
+            CInvoices.enterInvoice(client, telephone, email, service, namePet, sex)
+            messagebox.showinfo("Informacion", "Los datos fueron guardados")
+
+            #Limpiar campos
+            textBoxClient.delete(0, END)
+            textBoxTelephone.delete(0, END)
+            textBoxEmail.delete(0, END)
+            textBoxNamePet.delete(0, END)
+
+        except ValueError as error:
+            print("Error al ingresar datos {}".format(error))
+
 
 app = PetsForm()
 app.form()
