@@ -1,6 +1,7 @@
 from Conexion import *
 
 class CInvoices:
+    #Show dates
     def showInvoice():
         try:
             conexion = CConexion()
@@ -17,6 +18,7 @@ class CInvoices:
         except mysql.connector.Error as error:
             print("Error shows dates {}".format(error))
 
+    #Enter dates
     def enterInvoice(client, phone, email, service, petName, petSex):
         try:
             conexion = CConexion()
@@ -33,7 +35,7 @@ class CInvoices:
         except mysql.connector.Error as error:
             print("Error enter dates {}".format(error))
 
-    #Modificar dato
+    #Update dates
     #update invoices set invoices.cliente = '', invoices.phone = '', invoices.email = '', invoices.service = '', invoices.petName = '', invoices.petSex = '' where invoices.id = 2;
     def modifyData(idInvoices, client, phone, email, service, petName, petSex):
         try:
@@ -50,3 +52,20 @@ class CInvoices:
 
         except mysql.connector.Error as error:
             print("Error updates dates {}".format(error))
+
+    #Eliminate Date
+    def eliminateData(idInvoices):
+        try:
+            conexion = CConexion()
+            cone = conexion.ConexionDataBase()
+            cursor = cone.cursor()
+            sql = "delete from invoices where invoices.id = %s;"
+            # Values variable is a tupla
+            values = (idInvoices,)
+            cursor.execute(sql, values)
+            cone.commit()
+            print(cursor.rowcount,"Registration eliminated successfully")
+            cone.close()
+
+        except mysql.connector.Error as error:
+            print("Error eliminate date {}".format(error))

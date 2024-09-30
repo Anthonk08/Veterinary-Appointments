@@ -104,7 +104,7 @@ class PetsForm:
             groupBox.grid(row=2, column=0, padx=10, pady=10)
             Button(groupBox, text="Guardar", font="bold", width=15, command= self.invoicesSaves).grid(row=3, column=0)
             Button(groupBox, text="Actualizar", font="bold", width=15, command= self.invoicesUpdates).grid(row=3, column=1)
-            Button(groupBox, text="Borrar", font="bold", width=15).grid(row=3, column=2)
+            Button(groupBox, text="Borrar", font="bold", width=15, command= self.invoicesEliminate).grid(row=3, column=2)
 
             #Invoice list
             groupBox = LabelFrame(base, text="Lista de Facturas", padx=5, pady=5,)
@@ -163,7 +163,7 @@ class PetsForm:
             sex = comboSex.get()
 
             CInvoices.enterInvoice(client, telephone, email, service, namePet, sex)
-            messagebox.showinfo("Informacion", "Los datos fueron guardados")
+            messagebox.showinfo("Informacion", "La factura fue guardada")
 
             #Actualizar tabla
             self.updateTreeView()
@@ -175,7 +175,7 @@ class PetsForm:
             textBoxNamePet.delete(0, END)
 
         except ValueError as error:
-            print("Error al ingresar datos {}".format(error))
+            print("Error al ingresar factura {}".format(error))
 
     #Actualizar datos de la tabla
     def updateTreeView(self):
@@ -190,7 +190,7 @@ class PetsForm:
                 tree.insert("","end",values=row)
 
         except ValueError as error:
-            print("Error al actualizar datos {}".format(error))
+            print("Error al actualizar facturas {}".format(error))
 
     #Seleccionar dato de la tabla
     def selectDate(self, event=None):
@@ -234,7 +234,7 @@ class PetsForm:
             sex = comboSex.get()
 
             CInvoices.modifyData(idInvoice, client, telephone, email, service, namePet, sex)
-            messagebox.showinfo("Informacion", "Los datos fueron actualizados")
+            messagebox.showinfo("Informacion", "La factura fue actualizada")
 
             #Actualizar tabla
             self.updateTreeView()
@@ -247,7 +247,35 @@ class PetsForm:
             textBoxNamePet.delete(0, END)
 
         except ValueError as error:
-            print("Error al ingresar datos {}".format(error))
+            print("Error al actualizados factura {}".format(error))
+
+    #Eliminar factura de la tabla
+    def invoicesEliminate(self):
+        global textBoxId, textBoxClient, textBoxTelephone, textBoxEmail, textBoxNamePet
+
+        try:
+            #Verificar que los widgets esten inicializados
+            if textBoxId is None:
+                print("Los Widgets no estan inicializados")
+                return
+
+            idInvoice = textBoxId.get()
+
+            CInvoices.eliminateData(idInvoice)
+            messagebox.showinfo("Informacion", "La factura fue eliminada")
+
+            #Actualizar tabla
+            self.updateTreeView()
+
+            #Limpiar campos
+            textBoxId.delete(0, END)
+            textBoxClient.delete(0, END)
+            textBoxTelephone.delete(0, END)
+            textBoxEmail.delete(0, END)
+            textBoxNamePet.delete(0, END)
+
+        except ValueError as error:
+            print("Error al eliminar datos {}".format(error))
 
 
 app = PetsForm()
