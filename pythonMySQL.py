@@ -43,7 +43,7 @@ class PetsForm:
     global tree
     tree = None
 
-    def form(self):
+    def form(self, event=None):
         #Variables
         global textBoxId
         global textBoxClient
@@ -103,7 +103,7 @@ class PetsForm:
             groupBox = LabelFrame(base, text="Edicion De Datos", padx=20, pady=5)
             groupBox.grid(row=2, column=0, padx=10, pady=10)
             Button(groupBox, text="Guardar", font="bold", width=15, command= self.invoicesSaves).grid(row=3, column=0)
-            Button(groupBox, text="Editar", font="bold", width=15).grid(row=3, column=1)
+            Button(groupBox, text="Actualizar", font="bold", width=15, command= self.invoicesUpdates).grid(row=3, column=1)
             Button(groupBox, text="Borrar", font="bold", width=15).grid(row=3, column=2)
 
             #Invoice list
@@ -135,6 +135,8 @@ class PetsForm:
             #Agregar datos a la tabla
             for row in CInvoices.showInvoice():
                 tree.insert("","end",values=row)
+
+            tree.bind("<<TreeviewSelect>>", self.selectDate)
 
             tree.pack()
 
@@ -189,6 +191,64 @@ class PetsForm:
 
         except ValueError as error:
             print("Error al actualizar datos {}".format(error))
+
+    #Seleccionar dato de la tabla
+    def selectDate(self, event=None):
+        try:
+            #obtener el ID de el dato seleccionado
+            itemSelection = tree.focus()
+            if itemSelection:
+                values = tree.item(itemSelection)['values']
+                textBoxId.delete(0, END)
+                textBoxId.insert(0, values[0])
+                textBoxClient.delete(0, END)
+                textBoxClient.insert(0, values[1])
+                textBoxTelephone.delete(0, END)
+                textBoxTelephone.insert(0, values[2])
+                textBoxEmail.delete(0, END)
+                textBoxEmail.insert(0, values[3])
+                comboService.set(values[4])
+                textBoxNamePet.delete(0, END)
+                textBoxNamePet.insert(0, values[5])
+                comboSex.set(values[6])
+
+        except ValueError as error:
+            print("Error al seleccionar dato {}".format(error))
+
+    #Actualizar dato de la tabla
+    def invoicesUpdates(self):
+        global textBoxId, textBoxClient, textBoxTelephone, textBoxEmail, comboService, textBoxNamePet, comboSex, groupBox
+
+        try:
+            #Verificar que los widgets esten inicializados
+            if textBoxId is None or textBoxClient is None or textBoxTelephone is None or textBoxEmail is None or comboService is None or textBoxNamePet is None or comboSex is None:
+                print("Los Widgets no estan inicializados")
+                return
+
+            idInvoice = textBoxId.get()
+            client = textBoxClient.get()
+            telephone = textBoxTelephone.get()
+            email = textBoxEmail.get()
+            service = comboService.get()
+            namePet = textBoxNamePet.get()
+            sex = comboSex.get()
+
+            CInvoices.modifyData(idInvoice, client, telephone, email, service, namePet, sex)
+            messagebox.showinfo("Informacion", "Los datos fueron actualizados")
+
+            #Actualizar tabla
+            self.updateTreeView()
+
+            #Limpiar campos
+            textBoxId.delete(0, END)
+            textBoxClient.delete(0, END)
+            textBoxTelephone.delete(0, END)
+            textBoxEmail.delete(0, END)
+            textBoxNamePet.delete(0, END)
+
+        except ValueError as error:
+            print("Error al ingresar datos {}".format(error))
+
 
 app = PetsForm()
 app.form()
