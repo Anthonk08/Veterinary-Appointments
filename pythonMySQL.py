@@ -58,7 +58,7 @@ class PetsForm:
 
         try:
             base = Tk()
-            base.geometry("2020x350")
+            base.geometry("1500x350")
             base.title("Citas En El Veterinario. Formulario De Servicios")
 
             #Client informa1tion
@@ -108,28 +108,28 @@ class PetsForm:
 
             #Invoice list
             groupBox = LabelFrame(base, text="Lista de Facturas", padx=5, pady=5,)
-            groupBox.grid(row=0, column=1, padx=5, pady=5)
+            groupBox.grid(row=0, column=1, rowspan=2, padx=5, pady=5)
             #Treeview create
-            tree = ttk.Treeview(groupBox, columns=("ID", "Cliente", "Telefono", "Correo Electronico", "Servicio", "Nombre de la Mascota", "Sexo"),show='headings', height=5,)
-            tree.column("# 1", anchor=CENTER)
+            tree = ttk.Treeview(groupBox, columns=("ID", "Cliente", "Telefono", "Correo Electronico", "Servicio", "Nombre de la Mascota", "Sexo"),show='headings', height=10,)
+            tree.column("# 1", anchor=CENTER, width=50)
             tree.heading("# 1", text="ID")
 
-            tree.column("# 2", anchor=CENTER)
+            tree.column("# 2", anchor=CENTER, width=150)
             tree.heading("# 2", text="Cliente")
 
-            tree.column("# 3", anchor=CENTER)
+            tree.column("# 3", anchor=CENTER, width=100)
             tree.heading("# 3", text="Telefono")
 
             tree.column("# 4", anchor=CENTER)
             tree.heading("# 4", text="Correo Electronico")
 
-            tree.column("# 5", anchor=CENTER)
+            tree.column("# 5", anchor=CENTER, width=150)
             tree.heading("# 5", text="Servicio")
 
-            tree.column("# 6", anchor=CENTER)
+            tree.column("# 6", anchor=CENTER, width=130)
             tree.heading("# 6", text="Nombre de la Mascota")
 
-            tree.column("# 7", anchor=CENTER)
+            tree.column("# 7", anchor=CENTER, width=100)
             tree.heading("# 7", text="Sexo")
 
             #Agregar datos a la tabla

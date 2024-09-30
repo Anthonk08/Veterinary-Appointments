@@ -6,4 +6,4 @@
 
 1. Imagen de portada.
 
-![Imagen Previsualizacion]()
+![Imagen Portada](C:\Users\antho\OneDrive\Escritorio\Anthony\Universidad\Algoritmos paralelos\1- Semana\Veterinary-Appointments\portada.png)
