@@ -7,8 +7,14 @@ from tkinter import ttk
 from tkinter import messagebox
 from tkinter import font
 
-from Invoices import *
+#Importar resend
+import os
+import resend
+resend.api_key = os.environ["RESEND_API_KEY"]
+from datetime import datetime
 
+#Importar modulos de otros archivos
+from Invoices import *
 from Conexion import *
 
 class PetsForm:
@@ -165,6 +171,13 @@ class PetsForm:
             CInvoices.enterInvoice(client, telephone, email, service, namePet, sex)
             messagebox.showinfo("Informacion", "La factura fue guardada")
 
+            # Obtener la fecha y hora actual
+            current_date = datetime.now().strftime("%Y-%m-%d")
+            current_time = datetime.now().strftime("%H:%M")
+
+            #Enviar el correo de confirmacion
+            self.send_confirmation_email(client, namePet, service, current_date, current_time)
+
             #Actualizar tabla
             self.updateTreeView()
 
@@ -277,6 +290,40 @@ class PetsForm:
         except ValueError as error:
             print("Error al eliminar datos {}".format(error))
 
+    # Mensaje enviado al correo
+    def send_confirmation_email(self, client_name, pet_name, service, current_date, current_time):
+        try:
+
+           # Crear el mensaje
+            subject = "Confirmación de Cita en Veterinaria Paraiso Animal"
+            body = f"""
+            <p>Estimado/a {client_name},</p>
+            <p>Nos complace informarle que hemos recibido su solicitud de cita en Veterinaria Paraiso Animal. A continuación, le proporcionamos los detalles de su cita:</p>
+            <p><strong>Fecha:</strong> {current_date}<br>
+            <strong>Hora:</strong> {current_time}<br>
+            <strong>Mascota:</strong> {pet_name}<br>
+            <strong>Servicio:</strong> {service}</p>
+            <p>Si necesita realizar cambios en su cita o tiene alguna pregunta, no dude en ponerse en contacto con nosotros a través de este correo electrónico o llamándonos al 809-241-1598.</p>
+            <p>Agradecemos su confianza en Veterinaria Paraiso Animal. Esperamos verle pronto.</p>
+            <p>Atentamente,<br>
+            Laura Martinez<br>
+            Servicio al cliente<br>
+            Veterinaria Paraiso Animal</p>
+            """
+
+
+            params = {
+                "from": "Acme <onboarding@resend.dev>",
+                "to": ["anthonk0808@gmail.com"],
+                "subject": subject,
+                "html": body,
+            }
+            email = resend.Emails.send(params)
+            print("Correo enviado a: anthonytineocabreja3@gmail.com.")
+            print(email)
+
+        except Exception as e:
+            print(f"Ocurrió un error al enviar el correo: {str(e)}")
 
 app = PetsForm()
 app.form()
